@@ -1,0 +1,6 @@
+-I./include
+-I./build/include
+-DBSP_USE_HDF5
+-I/usr/include/hdf5/serial
+-I./build/_deps/taco-src/include
+-I./build/_deps/binsparse-src/include

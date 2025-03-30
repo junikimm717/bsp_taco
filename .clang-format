@@ -1,0 +1,12 @@
+# SPDX-FileCopyrightText: 2024 Binsparse Developers
+#
+# SPDX-License-Identifier: BSD-3-Clause
+
+---
+BasedOnStyle: LLVM
+PointerAlignment: Left
+ColumnLimit: 80
+AlwaysBreakTemplateDeclarations: Yes
+AllowShortFunctionsOnASingleLine: Empty
+SpaceAfterCStyleCast: true
+---
