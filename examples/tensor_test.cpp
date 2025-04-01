@@ -1,9 +1,7 @@
 #include <binsparse/tensor.h>
 #include <binsparse/read_tensor.h>
 #include <binsparse/write_tensor.h>
-#include "bsp_to_taco.hpp"
-#include "taco/tensor.h"
-#include "taco_to_bsp.hpp"
+#include <bsp_taco.hpp>
 
 using namespace std;
 
@@ -14,8 +12,8 @@ int main(int argc, char** argv) {
   }
   char* file_name = argv[1];
   bsp_tensor_t tensor = bsp_read_tensor(argv[1], NULL);
-  taco::TensorBase taco = makeTacoTensor(tensor);
-  tensor = makeBspTensor(taco);
+  taco::TensorBase taco = bsp_taco::makeTacoTensor(tensor);
+  tensor = bsp_taco::makeBspTensor(taco);
   {
     bsp_level_t* curLevel = tensor.level;
     while(true) {

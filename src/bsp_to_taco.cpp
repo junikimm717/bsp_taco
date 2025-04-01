@@ -1,13 +1,4 @@
-#include "bsp_to_taco.hpp"
-#include "binsparse/read_tensor.h"
-#include "binsparse/tensor.h"
-#include "binsparse/types.h"
-#include "taco/error.h"
-#include "taco/storage/array.h"
-#include "taco/storage/index.h"
-#include "taco/storage/storage.h"
-#include "taco/tensor.h"
-#include "taco/type.h"
+#include <bsp_taco/bsp_to_taco.hpp>
 
 static std::vector<int> getDimensions(bsp_tensor_t& tensor) {
   std::vector<int> dims(tensor.rank);
@@ -149,7 +140,7 @@ static taco::Index createTacoIndex(bsp_tensor_t& tensor, taco::Format& format) {
 Creates a taco object from a bsp tensor.
 Note that this function **consumes** the bsp tensor object!
 */
-taco::TensorBase makeTacoTensor(bsp_tensor_t& tensor) {
+taco::TensorBase bsp_taco::makeTacoTensor(bsp_tensor_t& tensor) {
   bsp_level_t* level = tensor.level;
 
   bsp_array_t values = bsp_get_tensor_values(tensor);
@@ -165,9 +156,8 @@ taco::TensorBase makeTacoTensor(bsp_tensor_t& tensor) {
   return tacoTensor;
 }
 
-taco::TensorBase readBinSparse(std::string filename) {
+taco::TensorBase bsp_taco::readBinSparse(std::string filename) {
   bsp_tensor_t tensor = bsp_read_tensor(filename.data(), NULL);
-  taco::TensorBase taco = makeTacoTensor(tensor);
-  bsp_destroy_tensor_t(tensor);
+  taco::TensorBase taco = bsp_taco::makeTacoTensor(tensor);
   return taco;
 }

@@ -1,8 +1,4 @@
-#include "binsparse/types.h"
-#include "taco/format.h"
-#include <binsparse/tensor.h>
-#include <binsparse/write_tensor.h>
-#include <taco.h>
+#include <bsp_taco/taco_to_bsp.hpp>
 
 static inline bsp_type_t getTacoDataType(taco::Datatype type) {
   if (type == taco::UInt8)
@@ -44,7 +40,7 @@ static bsp_array_t makeBspIndexArray(taco::Array arr) {
   return res;
 }
 
-bsp_tensor_t makeBspTensor(taco::TensorBase tacoTensor) {
+bsp_tensor_t bsp_taco::makeBspTensor(taco::TensorBase tacoTensor) {
   bsp_tensor_t res = bsp_construct_default_tensor_t();
   auto storage = tacoTensor.getStorage();
   auto index = storage.getIndex();

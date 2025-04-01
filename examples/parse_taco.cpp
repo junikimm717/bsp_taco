@@ -1,8 +1,5 @@
-#include <binsparse/tensor.h>
-#include <binsparse/read_tensor.h>
-#include <binsparse/write_tensor.h>
 #include <iostream>
-#include "bsp_to_taco.hpp"
+#include <bsp_taco.hpp>
 using namespace std;
 
 int main(int argc, char** argv) {
@@ -11,7 +8,7 @@ int main(int argc, char** argv) {
     return 1;
   }
   auto bsp = bsp_read_tensor(argv[1], NULL);
-  taco::Tensor<double> tensor = makeTacoTensor(bsp);
+  taco::Tensor<double> tensor = bsp_taco::makeTacoTensor(bsp);
 
   // so it seems like taco.pack screws over the storage?
   // tensor.pack();
