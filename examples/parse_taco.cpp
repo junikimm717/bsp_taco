@@ -10,9 +10,6 @@ int main(int argc, char** argv) {
   auto bsp = bsp_read_tensor(argv[1], NULL);
   taco::Tensor<double> tensor = bsp_taco::makeTacoTensor(bsp);
 
-  // so it seems like taco.pack screws over the storage?
-  // tensor.pack();
-
   auto index = tensor.getStorage().getIndex();
   cout << "dimension:" << tensor.getDimensions().size() << "\n";
   for (int i = 0; i < index.numModeIndices(); i++) {
