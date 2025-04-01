@@ -26,14 +26,14 @@ tensortest(
 )
 
 
-# tensortest(
-#   Tensor(
-#     Dense(SparseCOO{2}(Element(0.0))),
-#     fsprand(10, 10, 10, 0.1)
-#   ),
-#   joinpath(test_files, "input2.bsp.h5"),
-#   joinpath(test_files, "output2.bsp.h5")
-# )
+tensortest(
+  Tensor(
+    Dense(SparseCOO{2, Tuple{Int32, Int32}}(Element{0.0,Float64,Int32}())),
+    fsprand(10, 10, 10, 0.1)
+  ),
+  joinpath(test_files, "input2.bsp.h5"),
+  joinpath(test_files, "output2.bsp.h5")
+)
 
 tensortest(
   Tensor(
@@ -44,14 +44,14 @@ tensortest(
   joinpath(test_files, "output3.bsp.h5")
 )
 
-# tensortest(
-#   Tensor(
-#     SparseCOO{2}(Element(0.0)),
-#     fsprand(10, 10, 0.1)
-#   ),
-#   joinpath(test_files, "input4.bsp.h5"),
-#   joinpath(test_files, "output4.bsp.h5")
-# )
+tensortest(
+  Tensor(
+    SparseCOO{2, Tuple{Int32, Int32}}(Element{0.0,Float64,Int32}()),
+    fsprand(10, 10, 0.1)
+  ),
+  joinpath(test_files, "input4.bsp.h5"),
+  joinpath(test_files, "output4.bsp.h5")
+)
 
 tensortest(
   Tensor(
