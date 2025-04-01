@@ -16,7 +16,6 @@ set(CMAKE_CXX_FLAGS "-O3 -march=native -Wall -Wno-narrowing -fPIC")
 
 add_subdirectory(include)
 add_subdirectory(src)
-add_subdirectory(examples)
 
 #### binsparse reference implementation configuration
 
@@ -67,3 +66,8 @@ target_include_directories(${PROJECT_NAME} PUBLIC ${taco_SOURCE_DIR}/include)
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_BINARY_DIR}/include)
 target_link_libraries(${PROJECT_NAME} PUBLIC binsparse-rc taco)
+
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+  add_subdirectory(examples)
+  add_subdirectory(test)
+endif()

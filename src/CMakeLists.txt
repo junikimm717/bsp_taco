@@ -4,4 +4,5 @@
 
 target_sources(bsp-to-taco PRIVATE
   src/bsp_to_taco.cpp
+  src/taco_to_bsp.cpp
 )

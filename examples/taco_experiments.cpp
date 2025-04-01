@@ -26,16 +26,16 @@ int main() {
 
   Format fmt({Compressed({ModeFormat::ORDERED, ModeFormat::NOT_UNIQUE}),
               Singleton({ModeFormat::ORDERED, ModeFormat::NOT_UNIQUE})});
-  Tensor<double> A({5, 5}, fmt);
+  Tensor<double> A({4, 2}, fmt);
 
   // TODO: generate with finch, use experimental parse_taco.cpp and check the
   // tensor below is the same.
 
   // Insert non-zero values with explicit coordinates
-  A.insert({0, 0}, 3.5);
-  A.insert({1, 2}, 4.2);
-  A.insert({1, 1}, 1.1);
-  A.insert({2, 3}, 1.4);
+  A.insert({0, 1}, 1.0);
+  A.insert({1, 0}, 1.0);
+  A.insert({3, 0}, 3.0);
+  A.insert({3, 1}, 4.0);
 
   A.pack();
 
@@ -60,8 +60,8 @@ int main() {
 
   cout << "===================\n";
   cout << "Extract some values: \n";
-  for (int k = 0; k < 5; k++) {
-    for (int i = 0; i < 5; i++) {
+  for (int k = 0; k < 4; k++) {
+    for (int i = 0; i < 2; i++) {
       cout << A(k, i) << " ";
     }
     cout << "\n\n";

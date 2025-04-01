@@ -8,8 +8,6 @@
 #include "taco/storage/storage.h"
 #include "taco/tensor.h"
 #include "taco/type.h"
-#include <algorithm>
-
 
 static std::vector<int> getDimensions(bsp_tensor_t& tensor) {
   std::vector<int> dims(tensor.rank);
@@ -49,7 +47,7 @@ static inline taco::Datatype getTacoDataType(bsp_array_t& array) {
   case BSP_COMPLEX_FLOAT64:
     return taco::Complex128;
   default:
-    taco_ierror;
+    taco_uerror << "Unsupported type supplied to taco converter";
     return taco::Float64;
   }
 }
@@ -57,7 +55,7 @@ static inline taco::Datatype getTacoDataType(bsp_array_t& array) {
 static taco::Array bspToTacoArray(bsp_array_t& array) {
   taco::Datatype dataType = getTacoDataType(array);
   bsp_type_t type = array.type;
-  taco::Array res = taco::makeArray(getTacoDataType(array), array.size);
+  taco::Array res = taco::makeArray(dataType, array.size);
   // eventually, get rid of memcpy?
   memcpy(res.getData(), array.data, array.size * dataType.getNumBytes());
   return res;
@@ -91,9 +89,7 @@ static taco::Format createTacoFormat(bsp_tensor_t& tensor) {
     std::vector<int> modeOrdering(tensor.rank);
     for (int i = 0; i < tensor.rank; i++) {
       modeOrdering[i] = tensor.transpose[i];
-      std::cout << tensor.transpose[i] << " ";
     }
-    std::cout << " size: " << modeTypes.size() << "\n";
     return taco::Format(modeTypes, modeOrdering);
   }
   return taco::Format(modeTypes);
@@ -110,22 +106,28 @@ static taco::Index createTacoIndex(bsp_tensor_t& tensor, taco::Format& format) {
       level = ((bsp_dense_t*) level->data)->child;
       break;
     }
-    // eventually, this should probably not be UserOwns.
     case BSP_TENSOR_SPARSE: {
       bsp_sparse_t* data = (bsp_sparse_t*) level->data;
+      if (data->pointers_to != NULL && data->pointers_to->type != BSP_INT32) {
+        taco_uerror << "pointers_to just be an int32 type to interface "
+                    << "properly with taco!";
+      }
       modeIndices.push_back(taco::ModeIndex({
           data->pointers_to != NULL
               ? taco::Array(getTacoDataType(*data->pointers_to),
                             data->pointers_to->data, data->pointers_to->size,
                             taco::Array::Free)
               : taco::makeArray({
-                    (int64_t) 0,
-                    (int64_t) data->indices[0].size,
+                    (int) 0,
+                    (int) data->indices[0].size,
                 }),
           taco::Array(getTacoDataType(data->indices[0]), data->indices[0].data,
                       data->indices[0].size, taco::Array::Free),
       }));
       for (int i = 1; i < data->rank; i++) {
+        if (data->indices[i].type != BSP_INT32)
+          taco_terror << "indices just be an int32 type to interface properly "
+                      << "with taco!";
         modeIndices.push_back(taco::ModeIndex({
             taco::makeArray(getTacoDataType(data->indices[i]), 0),
             taco::Array(getTacoDataType(data->indices[i]),
@@ -143,6 +145,10 @@ static taco::Index createTacoIndex(bsp_tensor_t& tensor, taco::Format& format) {
   return taco::Index(format, modeIndices);
 }
 
+/*
+Creates a taco object from a bsp tensor.
+Note that this function **consumes** the bsp tensor object!
+*/
 taco::TensorBase makeTacoTensor(bsp_tensor_t& tensor) {
   bsp_level_t* level = tensor.level;
 
@@ -151,7 +157,7 @@ taco::TensorBase makeTacoTensor(bsp_tensor_t& tensor) {
   taco::Index tacoIndex = createTacoIndex(tensor, tacoFormat);
   taco::TensorBase tacoTensor(getTacoDataType(values), getDimensions(tensor),
                               tacoFormat);
-  //tacoTensor.setNeedsPack(false);
+  // tacoTensor.setNeedsPack(false);
   auto storage = tacoTensor.getStorage();
   storage.setIndex(tacoIndex);
   storage.setValues(bspToTacoArray(values));

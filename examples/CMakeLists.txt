@@ -9,3 +9,4 @@ endfunction()
 
 add_example(taco_experiments)
 add_example(parse_taco)
+add_example(tensor_test)

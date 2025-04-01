@@ -25,7 +25,7 @@ int main(int argc, char** argv) {
     for (int j = 0; j < index.getModeIndex(i).numIndexArrays(); j++) {
       auto array = index.getModeIndex(i).getIndexArray(j);
       for (int k = 0; k < array.getSize(); k++) {
-        cout << array.get(k).get().int64Value << " ";
+        cout << array.get(k).get().int32Value << " ";
       }
       cout << "\n";
     }
@@ -50,6 +50,5 @@ int main(int argc, char** argv) {
   for (int i = 0; i < vals.getSize(); i++) std::cout << vals.get(i).get().float64Value << " ";
   cout << "\n";
   auto format = tensor.getStorage().getFormat();
-  //bsp_destroy_tensor_t(bsp);
   return 0;
 }
