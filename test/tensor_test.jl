@@ -16,20 +16,20 @@ function tensortest(tensor::Tensor, input::AbstractString, output::AbstractStrin
   @assert tensor == output_tensor
 end
 
+
 tensortest(
   Tensor(
-    Dense(SparseList{Int32}(SparseList{Int32}(Element{0.0,Float64,Int32}()))),
+    Dense(SparseCOO{2, Tuple{Int32, Int32}}(Element{0.0,Float64,Int32}())),
     fsprand(10, 10, 10, 0.1)
   ),
   joinpath(test_files, "input1.bsp.h5"),
   joinpath(test_files, "output1.bsp.h5")
 )
 
-
 tensortest(
   Tensor(
-    Dense(SparseCOO{2, Tuple{Int32, Int32}}(Element{0.0,Float64,Int32}())),
-    fsprand(10, 10, 10, 0.1)
+    SparseCOO{2, Tuple{Int32, Int32}}(Element{0.0,Float64,Int32}()),
+    fsprand(10, 10, 0.1)
   ),
   joinpath(test_files, "input2.bsp.h5"),
   joinpath(test_files, "output2.bsp.h5")
@@ -37,17 +37,18 @@ tensortest(
 
 tensortest(
   Tensor(
-    Dense(Dense(Dense(Element{0.0,Float64,Int32}()))),
+    Dense(SparseList{Int32}(SparseList{Int32}(Element{0.0,Float64,Int32}()))),
     fsprand(10, 10, 10, 0.1)
   ),
   joinpath(test_files, "input3.bsp.h5"),
   joinpath(test_files, "output3.bsp.h5")
 )
 
+
 tensortest(
   Tensor(
-    SparseCOO{2, Tuple{Int32, Int32}}(Element{0.0,Float64,Int32}()),
-    fsprand(10, 10, 0.1)
+    Dense(Dense(Dense(Element{0.0,Float64,Int32}()))),
+    fsprand(10, 10, 10, 0.1)
   ),
   joinpath(test_files, "input4.bsp.h5"),
   joinpath(test_files, "output4.bsp.h5")

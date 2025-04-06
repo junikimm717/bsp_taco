@@ -72,7 +72,7 @@ bsp_tensor_t bsp_taco::makeBspTensor(taco::TensorBase tacoTensor) {
     if (format.getName() == taco::Sparse.getName()) {
       int boundary = dimsPtr + 1;
       while (boundary < dims.size() &&
-             typeid(formats[boundary]) != typeid(taco::Singleton)) {
+             formats[boundary].getName() == taco::Singleton.getName()) {
         boundary++;
       }
       curLevel->kind = BSP_TENSOR_SPARSE;
