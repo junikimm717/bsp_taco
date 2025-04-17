@@ -9,10 +9,7 @@ cmake_policy(SET CMP0079 NEW)
 
 set(CMAKE_C_STANDARD 11)
 
-#set(CMAKE_CXX_STANDARD 20)
-
-#set(CMAKE_C_FLAGS "-O3 -march=native")
-set(CMAKE_CXX_FLAGS "-O3 -march=native -Wall -Wno-narrowing -fPIC")
+set(CMAKE_CXX_FLAGS "-O3 -march=native -Wall -fPIC")
 
 add_subdirectory(include)
 add_subdirectory(src)
@@ -55,7 +52,7 @@ endif(PYTHON)
 
 FetchContent_Declare(
   taco
-  GIT_REPOSITORY https://github.com/junikimm717/taco
+  GIT_REPOSITORY https://github.com/tensor-compiler/taco
   GIT_TAG master
 )
 FetchContent_MakeAvailable(taco)
