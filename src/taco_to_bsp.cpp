@@ -137,3 +137,8 @@ void bsp_taco::writeBinSparse(taco::TensorBase taco, std::string filename) {
   bsp_tensor_t tensor = bsp_taco::makeBspTensor(taco);
   bsp_write_tensor(filename.data(), tensor, NULL, NULL, 9);
 }
+
+void bsp_taco::writeBinSparse(taco::TensorBase taco, char* filename) {
+  bsp_tensor_t tensor = bsp_taco::makeBspTensor(taco);
+  bsp_write_tensor(filename, tensor, NULL, NULL, 9);
+}
