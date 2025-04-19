@@ -5,7 +5,7 @@ using namespace std;
 
 int main(int argc, char** argv) {
   if (argc < 3) {
-    fprintf(stderr, "usage: ./read_to_taco [file_name.h5] {num_trials} [enable cold_cache?]\n");
+    fprintf(stderr, "usage: ./read_tns_benchmark [file_name.tns] {num_trials} [enable cold_cache?]\n");
     return 1;
   }
   bool cold_cache = argc >= 4;
@@ -14,6 +14,8 @@ int main(int argc, char** argv) {
   assert(num_trials >= 0);
 
   double durations[num_trials];
+
+  cout << "Opening " << file_name << "...\n";
 
   for (size_t i = 0; i < num_trials; i++) {
     if (cold_cache) {
@@ -32,8 +34,5 @@ int main(int argc, char** argv) {
   printf("Read file in %lf seconds\n", median_time);
   printf("Variance is %lf seconds, standard devication is %lf seconds\n",
          variance, sqrt(variance));
-
-  cout << "Opening " << file_name << "...\n";
-  taco::TensorBase taco = bsp_taco::readBinSparse(argv[1]);
   return 0;
 }
