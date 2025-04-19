@@ -7,6 +7,5 @@ function(add_example example_name)
   target_link_libraries(${example_name} bsp-to-taco)
 endfunction()
 
-add_example(taco_experiments)
-add_example(parse_taco)
-add_example(tensor_test)
+add_example(read_taco_benchmark)
+add_example(frostt_tns_bsp)

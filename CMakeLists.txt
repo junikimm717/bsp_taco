@@ -66,5 +66,6 @@ target_link_libraries(${PROJECT_NAME} PUBLIC binsparse-rc taco)
 
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
   add_subdirectory(examples)
+  add_subdirectory(benchmark)
   add_subdirectory(test)
 endif()
