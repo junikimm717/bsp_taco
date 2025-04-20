@@ -21,6 +21,7 @@ FetchContent_Declare(
   GIT_REPOSITORY https://github.com/junikimm717/binsparse-reference-c
   GIT_TAG main
 )
+set(ENABLE_CJSON_UNINSTALL OFF CACHE BOOL "Disable uninstall target" FORCE)
 FetchContent_MakeAvailable(binsparse)
 target_include_directories(bsp-to-taco PUBLIC ${binsparse_SOURCE_DIR}/include)
 
