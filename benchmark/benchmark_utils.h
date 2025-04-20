@@ -1,8 +1,10 @@
 #pragma once
 
+#include <bits/time.h>
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
+#include <cJSON/cJSON.h>
 
 double gettime() {
   struct timespec time;
@@ -52,4 +54,24 @@ void flush_cache() {
   static_assert(false);
 #endif
   usleep(100000);
+}
+
+char* result_json(double* x, size_t n, char* filename, char* operation) {
+  cJSON* c = cJSON_CreateObject();
+  cJSON* all_times = cJSON_AddArrayToObject(c, "times");
+  for (size_t i = 0; i < n; i++) {
+    cJSON* time = cJSON_CreateNumber(x[i]);
+    cJSON_AddItemToArray(all_times, time);
+  }
+  cJSON_AddStringToObject(c, "filename", filename);
+  cJSON_AddStringToObject(c, "operation", operation);
+
+  struct timespec spec;
+  clock_gettime(CLOCK_REALTIME, &spec);
+  long long millis = (long long) (spec.tv_sec) * 1000 + spec.tv_nsec / 1000000;
+  cJSON_AddNumberToObject(c, "date", millis);
+
+  char* res = cJSON_Print(c);
+  cJSON_Delete(c);
+  return res;
 }

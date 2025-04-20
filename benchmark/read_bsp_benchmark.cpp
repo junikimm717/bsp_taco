@@ -1,11 +1,12 @@
-#include <bsp_taco.hpp>
 #include "benchmark_utils.h"
+#include <bsp_taco.hpp>
 
 using namespace std;
 
 int main(int argc, char** argv) {
   if (argc < 3) {
-    fprintf(stderr, "usage: ./read_tns_benchmark [file_name.tns] {num_trials} [enable cold_cache?]\n");
+    fprintf(stderr, "usage: ./read_bsp_benchmark [file_name.bsp.h5] {num_trials} "
+                    "[enable cold_cache?]\n");
     return 1;
   }
   bool cold_cache = argc >= 4;
@@ -15,7 +16,7 @@ int main(int argc, char** argv) {
 
   double durations[num_trials];
 
-  cout << "Opening " << file_name << "...\n";
+  cerr << "Opening " << file_name << "...\n";
 
   for (size_t i = 0; i < num_trials; i++) {
     if (cold_cache) {
@@ -25,14 +26,21 @@ int main(int argc, char** argv) {
     bsp_taco::readBinSparse(argv[1]);
     double end = gettime();
     durations[i] = end - begin;
-    cout << "Run " << i << ": Took " << durations[i] << " seconds to parse...\n";
+    cerr << "Run " << i << ": Took " << durations[i]
+         << " seconds to parse...\n";
   }
+
+  char* output = result_json(durations, num_trials, file_name,
+                             std::string("taco_bsp").data());
 
   qsort(durations, num_trials, sizeof(double), compar);
   double variance = compute_variance(durations, num_trials);
   double median_time = durations[num_trials / 2];
-  printf("Read file in %lf seconds\n", median_time);
-  printf("Variance is %lf seconds, standard devication is %lf seconds\n",
-         variance, sqrt(variance));
+  fprintf(stderr, "Read file in %lf seconds\n", median_time);
+  fprintf(stderr,
+          "Variance is %lf seconds, standard deviation is %lf seconds\n",
+          variance, sqrt(variance));
+  cout << output << endl;
+  free(output);
   return 0;
 }
