@@ -56,7 +56,7 @@ void flush_cache() {
   usleep(100000);
 }
 
-char* result_json(double* x, size_t n, char* filename, char* operation) {
+char* result_json(double* x, size_t n, char* filename, char* operation, long long nnz) {
   cJSON* c = cJSON_CreateObject();
   cJSON* all_times = cJSON_AddArrayToObject(c, "times");
   for (size_t i = 0; i < n; i++) {
@@ -70,6 +70,7 @@ char* result_json(double* x, size_t n, char* filename, char* operation) {
   clock_gettime(CLOCK_REALTIME, &spec);
   long long millis = (long long) (spec.tv_sec) * 1000 + spec.tv_nsec / 1000000;
   cJSON_AddNumberToObject(c, "date", millis);
+  cJSON_AddNumberToObject(c, "nnz", (double) nnz);
 
   char* res = cJSON_Print(c);
   cJSON_Delete(c);

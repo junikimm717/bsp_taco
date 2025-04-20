@@ -5,8 +5,9 @@ using namespace std;
 
 int main(int argc, char** argv) {
   if (argc < 3) {
-    fprintf(stderr, "usage: ./read_bsp_benchmark [file_name.bsp.h5] {num_trials} "
-                    "[enable cold_cache?]\n");
+    fprintf(stderr,
+            "usage: ./read_bsp_benchmark [file_name.bsp.h5] {num_trials} "
+            "[enable cold_cache?]\n");
     return 1;
   }
   bool cold_cache = argc >= 4;
@@ -18,20 +19,24 @@ int main(int argc, char** argv) {
 
   cerr << "Opening " << file_name << "...\n";
 
+  size_t nnz = 0;
   for (size_t i = 0; i < num_trials; i++) {
     if (cold_cache) {
       flush_cache();
     }
     double begin = gettime();
-    bsp_taco::readBinSparse(argv[1]);
+    auto tensor = bsp_taco::readBinSparse(argv[1]);
     double end = gettime();
+    if (i == 0) {
+      nnz = tensor.getStorage().getValues().getSize();
+    }
     durations[i] = end - begin;
     cerr << "Run " << i << ": Took " << durations[i]
          << " seconds to parse...\n";
   }
 
   char* output = result_json(durations, num_trials, file_name,
-                             std::string("taco_bsp").data());
+                             std::string("taco_bsp").data(), nnz);
 
   qsort(durations, num_trials, sizeof(double), compar);
   double variance = compute_variance(durations, num_trials);

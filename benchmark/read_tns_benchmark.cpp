@@ -46,27 +46,32 @@ int main(int argc, char** argv) {
 
   cerr << "Opening " << file_name << "...\n";
 
+  size_t nnz = 0;
   for (size_t i = 0; i < num_trials; i++) {
     if (cold_cache) {
       flush_cache();
     }
+    // make sure you ONLY do tensor reading here.
     double begin = gettime();
-    taco::read(std::string(file_name), format);
+    auto tensor = taco::read(std::string(file_name), format);
     double end = gettime();
+    if (i == 0) {
+      nnz = tensor.getStorage().getValues().getSize();
+    }
     durations[i] = end - begin;
     cerr << "Run " << i << ": Took " << durations[i]
          << " seconds to parse...\n";
   }
 
   char* output = result_json(durations, num_trials, file_name,
-                             std::string("taco_tns").data());
+                             std::string("taco_tns").data(), nnz);
 
   qsort(durations, num_trials, sizeof(double), compar);
   double variance = compute_variance(durations, num_trials);
   double median_time = durations[num_trials / 2];
   fprintf(stderr, "Read file in %lf seconds\n", median_time);
   fprintf(stderr,
-          "Variance is %lf seconds, standard devication is %lf seconds\n",
+          "Variance is %lf seconds, standard deviation is %lf seconds\n",
           variance, sqrt(variance));
   cout << output << endl;
   free(output);
