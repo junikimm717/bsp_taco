@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
   }
   taco::Format format(modeFormats);
 
-  cerr << "Opening " << file_name << "...\n";
+  cerr << "Using taco_tns to open " << file_name << "...\n";
 
   size_t nnz = 0;
   for (size_t i = 0; i < num_trials; i++) {

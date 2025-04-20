@@ -21,7 +21,7 @@ int main(int argc, char** argv) {
 
   double durations[num_trials];
 
-  cerr << "Opening " << file_name << "...\n";
+  cerr << "Using splatt_tns to open " << file_name << "...\n";
 
   size_t nnz = 0;
   for (size_t i = 0; i < num_trials; i++) {
