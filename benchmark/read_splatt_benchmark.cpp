@@ -43,6 +43,9 @@ int main(int argc, char** argv) {
     durations[i] = end - begin;
     cerr << "Run " << i << ": Took " << durations[i]
          << " seconds to parse...\n";
+
+    splatt_free_csf(tt, cpd_opts);
+    splatt_free_opts(cpd_opts);
   }
 
   char* output = result_json(durations, num_trials, file_name,
