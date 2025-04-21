@@ -11,17 +11,16 @@ end
 filename = ARGS[1]
 iterations = parse(Int, ARGS[2])
 
-print("Using finch_bsp to open $filename...\n")
+print(stderr, "Using finch_bsp to open $filename...\n")
 
 tensor = fread(filename)
 nnz = countstored(tensor)
 
-res = @benchmark fread(filename) samples=iterations evals=1;
+times = [0.0 for _ in 1:iterations]
 
-times = res.times
-
-for i in eachindex(times)
-  times[i] = times[i] / 1_000_000_000
+for i in 1:iterations
+  res = @benchmark fread(filename) evals=1;
+  times[i] = res.times[1]/1_000_000_000
 end
 
 c = Dict(
