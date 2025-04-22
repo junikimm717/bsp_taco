@@ -4,7 +4,7 @@ using JSON;
 using BenchmarkTools;
 
 if length(ARGS) < 2
-  print(stderr, "usage: julia read_finch_benchmark.jl [file_name.bsp.h5] {num_trials}\n")
+  print(stderr, "usage: julia read_bsp_benchmark.jl [file_name.bsp.h5] {num_trials}\n")
   exit(1)
 end
 

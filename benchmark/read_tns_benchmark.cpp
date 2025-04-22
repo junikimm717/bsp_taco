@@ -1,18 +1,20 @@
-#include "benchmark_utils.h"
 #include <bsp_taco.hpp>
 #include <fstream>
 #include <sstream>
 #include <string>
 
+#include "benchmark_utils.h"
+#include "formats.hpp"
+
 using namespace std;
 
 int main(int argc, char** argv) {
-  if (argc < 3) {
+  if (argc < 4) {
     fprintf(stderr, "usage: ./read_tns_benchmark [file_name.tns] {num_trials} "
-                    "[enable cold_cache?]\n");
+                    "[coo|csf]\n");
     return 1;
   }
-  bool cold_cache = argc >= 4;
+  bool cold_cache = false;
   char* file_name = argv[1];
   int num_trials = std::atoi(argv[2]);
 
@@ -38,13 +40,13 @@ int main(int argc, char** argv) {
 
   double durations[num_trials];
 
-  vector<taco::ModeFormatPack> modeFormats = {taco::Dense};
-  for (int i = 1; i < dimensions; i++) {
-    modeFormats.push_back(taco::Sparse);
-  }
-  taco::Format format(modeFormats);
+  benchmark_format_t benchmarkFmt = getModeFormat(argv[3]);
+  auto modeFormatPacks = getModeFormatPack(benchmarkFmt, dimensions);
+  taco::Format format(modeFormatPacks);
 
   cerr << "Using taco_tns to open " << file_name << "...\n";
+  cerr << "Using the " << getFormatName(benchmarkFmt) << " format with "
+       << dimensions << " dimensions..." << endl;
 
   size_t nnz = 0;
   for (size_t i = 0; i < num_trials; i++) {
@@ -63,8 +65,9 @@ int main(int argc, char** argv) {
          << " seconds to parse...\n";
   }
 
-  char* output = result_json(durations, num_trials, file_name,
-                             std::string("taco_tns").data(), nnz);
+  char* output = result_json(
+      durations, num_trials, file_name,
+      std::string("taco_tns_" + getFormatName(benchmarkFmt)).data(), nnz);
 
   qsort(durations, num_trials, sizeof(double), compar);
   double variance = compute_variance(durations, num_trials);

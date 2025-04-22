@@ -3,11 +3,15 @@
 #include <sstream>
 #include <string>
 
+#include "formats.hpp"
+
 using namespace std;
 
 int main(int argc, char** argv) {
-  if (argc < 3) {
-    fprintf(stderr, "usage: ./frostt_tns_bsp [input_file.tns] [file_name.h5]\n");
+  if (argc < 4) {
+    fprintf(
+        stderr,
+        "usage: ./frostt_tns_bsp [input_file.tns] [file_name.h5] [coo|csf]\n");
     return 1;
   }
   char* input_file = argv[1];
@@ -33,16 +37,16 @@ int main(int argc, char** argv) {
 
   assert(dimensions > 0);
 
+  benchmark_format_t benchmarkFmt = getModeFormat(argv[3]);
+  auto modeFormatPacks = getModeFormatPack(benchmarkFmt, dimensions);
+  taco::Format format(modeFormatPacks);
+
   cerr << "Reading from " << input_file << "\n";
   cerr << "Outputting to " << output_file << "\n";
-  cerr << "Using " << dimensions << " dimensions..." << endl;
-
-  vector<taco::ModeFormatPack> modeFormats = {taco::Dense};
-  for (int i = 1; i < dimensions; i++) {
-    modeFormats.push_back(taco::Sparse);
-  }
-  taco::Format format(modeFormats);
+  cerr << "Using the " << getFormatName(benchmarkFmt) << " format with "
+       << dimensions << " dimensions...\n";
   cerr << "Beginning reading process" << endl;
+
   taco::TensorBase A = taco::read(std::string(input_file), format);
   cerr << "Finished reading, beginning writing..." << endl;
   bsp_taco::writeBinSparse(A, output_file);
