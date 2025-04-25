@@ -15,10 +15,19 @@ output = ARGS[2]
 
 print(stderr, "Using finch_bsp to open $filename...\n")
 @time tensor = fread(filename)
+dims = ndims(tensor);
 print(stderr, "Starting the writing process...\n")
 
 if ARGS[3] == "coo"
-  @time fwrite(output, Tensor(COOFormat(ndims(tensor), 0.0), tensor))
+  tensor_fmt = Element{0.0, Float64, Int32}();
+  tensor_fmt = SparseCOO{dims, NTuple{dims, Int32}}(tensor_fmt);
+  @time fwrite(output, Tensor(tensor_fmt, tensor))
 else
-  @time fwrite(output, Tensor(CSFFormat(ndims(tensor), 0.0), tensor))
+  tensor_fmt = Element{0.0, Float64, Int32}();
+  for i in 1:dims-1
+    global tensor_fmt = SparseList{Int32}(tensor_fmt);
+  end
+  tensor_fmt = Dense(tensor_fmt)
+  @time fwrite(output, Tensor(tensor_fmt, tensor))
 end
+
