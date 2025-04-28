@@ -43,13 +43,9 @@ static inline taco::Datatype getTacoDataType(bsp_array_t& array) {
   }
 }
 
-static taco::Array bspToTacoArray(bsp_array_t& array) {
-  taco::Datatype dataType = getTacoDataType(array);
-  bsp_type_t type = array.type;
-  taco::Array res = taco::makeArray(dataType, array.size);
-  // eventually, get rid of memcpy?
-  memcpy(res.getData(), array.data, array.size * dataType.getNumBytes());
-  return res;
+static inline taco::Array bspToTacoArray(bsp_array_t& array) {
+  return taco::Array(getTacoDataType(array), array.data, array.size,
+                     taco::Array::Free);
 }
 
 static taco::Format createTacoFormat(bsp_tensor_t& tensor) {
@@ -144,7 +140,6 @@ taco::TensorBase bsp_taco::makeTacoTensor(bsp_tensor_t& tensor) {
   taco::Index tacoIndex = createTacoIndex(tensor, tacoFormat);
   taco::TensorBase tacoTensor(getTacoDataType(values), getDimensions(tensor),
                               tacoFormat);
-  // tacoTensor.setNeedsPack(false);
   auto storage = tacoTensor.getStorage();
   storage.setIndex(tacoIndex);
   storage.setValues(bspToTacoArray(values));
