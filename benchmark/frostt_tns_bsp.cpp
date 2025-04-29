@@ -49,6 +49,6 @@ int main(int argc, char** argv) {
 
   taco::TensorBase A = taco::read(std::string(input_file), format);
   cerr << "Finished reading, beginning writing..." << endl;
-  bsp_taco::writeBinSparse(A, output_file);
+  bsp_taco::writeBinSparse(A, output_file, 1);
   return 0;
 }

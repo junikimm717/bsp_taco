@@ -15,7 +15,7 @@ bsp_tensor_t makeBspTensor(taco::TensorBase tacoTensor);
 /*
 Take a bsp tensor object, and write it as binsparse to a file.
 */
-void writeBinSparse(taco::TensorBase taco, std::string filename);
+void writeBinSparse(taco::TensorBase taco, std::string filename, int compression_level);
 
-void writeBinSparse(taco::TensorBase taco, char* filename);
+void writeBinSparse(taco::TensorBase taco, char* filename, int compression_level);
 }

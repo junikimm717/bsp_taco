@@ -133,12 +133,12 @@ bsp_tensor_t bsp_taco::makeBspTensor(taco::TensorBase tacoTensor) {
   return res;
 }
 
-void bsp_taco::writeBinSparse(taco::TensorBase taco, std::string filename) {
+void bsp_taco::writeBinSparse(taco::TensorBase taco, std::string filename, int compression_level) {
   bsp_tensor_t tensor = bsp_taco::makeBspTensor(taco);
-  bsp_write_tensor(filename.data(), tensor, NULL, NULL, 9);
+  bsp_write_tensor(filename.data(), tensor, NULL, NULL, compression_level);
 }
 
-void bsp_taco::writeBinSparse(taco::TensorBase taco, char* filename) {
+void bsp_taco::writeBinSparse(taco::TensorBase taco, char* filename, int compression_level) {
   bsp_tensor_t tensor = bsp_taco::makeBspTensor(taco);
-  bsp_write_tensor(filename, tensor, NULL, NULL, 9);
+  bsp_write_tensor(filename, tensor, NULL, NULL, compression_level);
 }
